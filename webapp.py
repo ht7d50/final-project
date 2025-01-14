@@ -8,6 +8,7 @@ import os
 import time
 import pymongo
 import sys
+import pydealer
  
 app = Flask(__name__)
 
@@ -35,7 +36,7 @@ github = oauth.remote_app(
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
-collection = db['posts'] #TODO: put the name of the collection here
+collection = db['card_game'] #TODO: put the name of the collection here
 
 # Send a ping to confirm a successful connection
 try:
@@ -58,7 +59,7 @@ def home():
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
 def login():   
-    return github.authorize(callback=url_for('authorized', _external=True, _scheme='https')) #callback URL must match the pre-configured callback URL
+    return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
 def logout():
