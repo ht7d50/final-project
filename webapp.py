@@ -2,6 +2,8 @@ from flask import Flask, redirect, url_for, session, request, jsonify, render_te
 from markupsafe import Markup
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
+import pydealer
+from pydealer import POKER_RANKS
 
 import pprint
 import os
@@ -11,7 +13,7 @@ import sys
  
 app = Flask(__name__)
 
-app.debug = False #Change this to False for production
+app.debug = True #Change this to False for production
 #os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
@@ -35,7 +37,7 @@ github = oauth.remote_app(
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
-collection = db['posts'] #TODO: put the name of the collection here
+collection = db['card_game'] #TODO: put the name of the collection here
 
 # Send a ping to confirm a successful connection
 try:
@@ -58,7 +60,7 @@ def home():
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
 def login():   
-    return github.authorize(callback=url_for('authorized', _external=True, _scheme='https')) #callback URL must match the pre-configured callback URL
+    return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
 def logout():
@@ -94,6 +96,7 @@ def renderPage1():
 
 @app.route('/page2')
 def renderPage2():
+    #deck = pydealer.Deck(=)
     return render_template('page2.html')
 
 #the tokengetter is automatically called to check who is logged in.
