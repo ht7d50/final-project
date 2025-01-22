@@ -12,7 +12,7 @@ import pydealer
  
 app = Flask(__name__)
 
-app.debug = False #Change this to False for production
+app.debug = True #Change this to False for production
 #os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
@@ -101,7 +101,40 @@ def renderPage2():
 @github.tokengetter
 def get_github_oauth_token():
     return session['github_token']
+    
+    
+    deck = pydealer.Deck()
+    deck.shuffle()
+    
+    # "Throw" the cards by creating a list of random positions
+    cards = [
+        {
+            "card": card.name,
+            "suit": card.suit,
+            "value": card.value,
+            "x": random.randint(0, 100),
+            "y": random.randint(0, 100)
+        }  for card in deck.cards     
+    ]
 
+# Create a new route to handle card pickup
+@app.route('/pickup-card', methods=['POST'])
+def pickup_card():
+    if 'github_token' not in session:
+        return jsonify({"error": "Not logged in"}), 401
+    
+    card_index = int(request.form['card_index'])
+    
+    # Here you would typically update the game state in the database
+    # For this example, we'll just return a success message
+    return jsonify({"message": f"Picked up card at index {card_index}"}), 200
 
-if __name__ == '__main__':
-    app.run()
+# Create a new route to start a new gam
+    
+    # Here you would typically reset the game state in the database
+    # For this example, we'll just redirect to the card pickup page
+    return redirect(url_for('card_pickup'))
+    
+    if __name__ == '__main__':
+        app.run()
+    

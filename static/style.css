@@ -1,3 +1,9 @@
-.gameinfo {
-	display: none;
+p {
+	font-family: "Times New Roman", Times, serif;
+	text-align: center;
 }
+h3 {
+	text-align: center;
+}
+.collapse {
+	text-align: center;
